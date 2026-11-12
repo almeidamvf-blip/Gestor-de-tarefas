@@ -40,9 +40,9 @@
   </style>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-200">
-  <div class="max-w-4xl mx-auto px-4 py-6 sm:py-10">
+  <div class="max-w-6xl mx-auto px-4 py-6 sm:py-8">
     <!-- Cabeçalho -->
-    <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <header class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
       <div>
         <div class="flex items-center gap-2.5">
           <div class="w-9 h-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-sm">
@@ -55,7 +55,7 @@
         <p id="current-date" class="text-sm text-slate-500 dark:text-slate-400 mt-1 capitalize"></p>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+      <div class="flex flex-wrap items-center gap-2 self-start md:self-auto">
         <button
           id="export-json"
           type="button"
@@ -94,18 +94,6 @@
         </button>
 
         <button
-          id="view-toggle"
-          type="button"
-          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-          aria-label="Alternar visualização em lista ou agrupada por cliente"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-          </svg>
-          <span id="view-label">Agrupar por Cliente</span>
-        </button>
-
-        <button
           id="theme-toggle"
           type="button"
           class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -122,18 +110,70 @@
       </div>
     </header>
 
-    <!-- Barra de Progresso -->
-    <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 mb-6 shadow-sm">
-      <div class="flex items-center justify-between text-sm mb-2">
-        <span class="font-medium text-slate-700 dark:text-slate-300">Progresso geral</span>
-        <span id="progress-text" class="font-semibold text-indigo-600 dark:text-indigo-400">0 de 0 concluídas (0%)</span>
+    <!-- Painel Superior: Progresso + Pomodoro -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-6">
+      <!-- Progresso -->
+      <div class="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between text-sm mb-2">
+            <span class="font-medium text-slate-700 dark:text-slate-300">Progresso geral</span>
+            <span id="progress-text" class="font-semibold text-indigo-600 dark:text-indigo-400">0 de 0 concluídas (0%)</span>
+          </div>
+          <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+            <div id="progress-bar" class="h-full bg-indigo-600 dark:bg-indigo-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center justify-between gap-2 mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400">
+          <span id="today-summary">Hoje: 0 pendentes</span>
+          <span id="events-summary">Eventos hoje: 0</span>
+        </div>
       </div>
-      <div class="w-full h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-        <div id="progress-bar" class="h-full bg-indigo-600 dark:bg-indigo-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+
+      <!-- Timer Pomodoro -->
+      <div class="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="min-w-0 flex-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300">
+              Pomodoro
+            </span>
+            <div class="inline-flex rounded-lg bg-slate-100 dark:bg-slate-800 p-0.5 text-xs">
+              <button type="button" data-pomo-mode="focus" class="pomo-mode-btn px-2 py-0.5 rounded-md font-medium bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs">25m</button>
+              <button type="button" data-pomo-mode="short" class="pomo-mode-btn px-2 py-0.5 rounded-md font-medium text-slate-500 dark:text-slate-400">5m</button>
+              <button type="button" data-pomo-mode="long" class="pomo-mode-btn px-2 py-0.5 rounded-md font-medium text-slate-500 dark:text-slate-400">15m</button>
+            </div>
+          </div>
+          <p id="pomo-task-label" class="text-sm font-medium text-slate-700 dark:text-slate-200 truncate">
+            Clique no ▶ em qualquer tarefa para focar
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3 shrink-0">
+          <span id="pomo-display" class="text-2xl sm:text-3xl font-bold tabular-nums tracking-tight text-slate-900 dark:text-white">25:00</span>
+          <div class="flex items-center gap-1.5">
+            <button
+              id="pomo-toggle"
+              type="button"
+              class="px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-semibold transition-colors shadow-xs"
+            >
+              Iniciar
+            </button>
+            <button
+              id="pomo-reset"
+              type="button"
+              class="p-2 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              title="Reiniciar timer"
+              aria-label="Reiniciar timer"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Formulário de Nova Tarefa / Projeto -->
+    <!-- Formulário de Nova Tarefa / Evento -->
     <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 sm:p-5 mb-6 shadow-sm">
       <form id="task-form" class="space-y-3">
         <div class="flex flex-col sm:flex-row gap-2.5">
@@ -142,7 +182,7 @@
             type="text"
             required
             maxlength="140"
-            placeholder="Título da tarefa ou projeto (ex.: Fechamento fiscal mensal)"
+            placeholder="Título da tarefa, projeto ou reunião..."
             class="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm sm:text-base"
           />
           <button
@@ -156,7 +196,18 @@
           </button>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-2.5">
+          <div>
+            <label for="task-type" class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Tipo</label>
+            <select
+              id="task-type"
+              class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <option value="task">Tarefa</option>
+              <option value="event">Evento / Reunião</option>
+            </select>
+          </div>
+
           <div>
             <label for="task-category" class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Empresa / Área</label>
             <select
@@ -178,7 +229,7 @@
               type="text"
               list="client-suggestions"
               maxlength="80"
-              placeholder="Ex.: SUPERMERCADO CENTRAL ou Interno"
+              placeholder="Cliente ou Interno"
               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 text-sm text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
             <datalist id="client-suggestions"></datalist>
@@ -197,10 +248,19 @@
           </div>
 
           <div>
-            <label for="task-due" class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Prazo (opcional)</label>
+            <label for="task-due" class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Data</label>
             <input
               id="task-due"
               type="date"
+              class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label for="task-time" class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Horário (opcional)</label>
+            <input
+              id="task-time"
+              type="time"
               class="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
@@ -208,28 +268,46 @@
       </form>
     </section>
 
-    <!-- Filtros e Busca -->
-    <section class="flex flex-col gap-3 mb-4">
+    <!-- Modos de Visualização e Filtros -->
+    <section class="flex flex-col gap-3 mb-5">
       <div class="flex flex-wrap items-center justify-between gap-2">
-        <div id="status-tabs" class="inline-flex p-1 rounded-xl bg-slate-200/70 dark:bg-slate-800/80" role="tablist">
-          <button type="button" data-filter="all" class="filter-tab px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm">
-            Todas (<span id="count-all">0</span>)
+        <!-- Modos de Visualização -->
+        <div id="view-switcher" class="inline-flex flex-wrap p-1 rounded-xl bg-slate-200/70 dark:bg-slate-800/80 gap-1" role="tablist">
+          <button type="button" data-view="today" class="view-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors">
+            Hoje (Cronograma)
           </button>
-          <button type="button" data-filter="pending" class="filter-tab px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
-            Pendentes (<span id="count-pending">0</span>)
+          <button type="button" data-view="kanban" class="view-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors">
+            Kanban
           </button>
-          <button type="button" data-filter="completed" class="filter-tab px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">
-            Concluídas (<span id="count-completed">0</span>)
+          <button type="button" data-view="list" class="view-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors">
+            Lista
+          </button>
+          <button id="view-toggle" type="button" data-view="clients" class="view-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors">
+            Por Cliente
           </button>
         </div>
 
-        <button
-          id="clear-completed"
-          type="button"
-          class="text-xs sm:text-sm font-medium text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 disabled:opacity-40 disabled:pointer-events-none transition-colors px-2 py-1"
-        >
-          Limpar concluídas
-        </button>
+        <div class="flex items-center gap-2">
+          <div id="status-tabs" class="inline-flex p-1 rounded-xl bg-slate-200/70 dark:bg-slate-800/80" role="tablist">
+            <button type="button" data-filter="all" class="filter-tab px-2.5 py-1 rounded-lg text-xs font-medium transition-colors bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm">
+              Todas (<span id="count-all">0</span>)
+            </button>
+            <button type="button" data-filter="pending" class="filter-tab px-2.5 py-1 rounded-lg text-xs font-medium transition-colors text-slate-600 dark:text-slate-400">
+              Pendentes (<span id="count-pending">0</span>)
+            </button>
+            <button type="button" data-filter="completed" class="filter-tab px-2.5 py-1 rounded-lg text-xs font-medium transition-colors text-slate-600 dark:text-slate-400">
+              Concluídas (<span id="count-completed">0</span>)
+            </button>
+          </div>
+
+          <button
+            id="clear-completed"
+            type="button"
+            class="text-xs sm:text-sm font-medium text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 disabled:opacity-40 disabled:pointer-events-none transition-colors px-2 py-1"
+          >
+            Limpar concluídas
+          </button>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
@@ -240,7 +318,7 @@
           <input
             id="search-input"
             type="search"
-            placeholder="Buscar tarefas ou cliente..."
+            placeholder="Buscar tarefas, eventos ou cliente..."
             class="w-full pl-9 pr-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
@@ -271,14 +349,14 @@
           aria-label="Ordenar tarefas"
           class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
-          <option value="recent">Mais recentes</option>
+          <option value="chronological">Ordem cronológica (data e hora)</option>
           <option value="priority">Maior prioridade</option>
-          <option value="due">Prazo mais próximo</option>
+          <option value="recent">Mais recentes</option>
         </select>
       </div>
     </section>
 
-    <!-- Lista de Tarefas -->
+    <!-- Conteúdo Principal -->
     <main>
       <div id="task-list" class="space-y-4"></div>
 
@@ -288,8 +366,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z" />
           </svg>
         </div>
-        <p id="empty-title" class="font-medium text-slate-700 dark:text-slate-300">Nenhuma tarefa encontrada</p>
-        <p id="empty-subtitle" class="text-sm text-slate-500 dark:text-slate-400 mt-1">Adicione uma nova tarefa acima ou ajuste os filtros.</p>
+        <p id="empty-title" class="font-medium text-slate-700 dark:text-slate-300">Nenhum item encontrado</p>
+        <p id="empty-subtitle" class="text-sm text-slate-500 dark:text-slate-400 mt-1">Adicione uma tarefa ou evento acima, ou ajuste os filtros.</p>
       </div>
     </main>
   </div>
@@ -298,7 +376,7 @@
   <div id="edit-modal" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
     <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-md p-5 shadow-xl">
       <div class="flex items-center justify-between mb-4">
-        <h2 id="edit-modal-title" class="text-lg font-semibold">Editar tarefa</h2>
+        <h2 id="edit-modal-title" class="text-lg font-semibold">Editar item</h2>
         <button id="edit-cancel-x" type="button" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 rounded-lg" aria-label="Fechar">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -317,6 +395,24 @@
             maxlength="140"
             class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="edit-type" class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Tipo</label>
+            <select id="edit-type" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="task">Tarefa</option>
+              <option value="event">Evento / Reunião</option>
+            </select>
+          </div>
+          <div>
+            <label for="edit-status" class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Status</label>
+            <select id="edit-status" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="todo">A Fazer</option>
+              <option value="doing">Em Andamento</option>
+              <option value="done">Concluído</option>
+            </select>
+          </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -352,9 +448,15 @@
           />
         </div>
 
-        <div>
-          <label for="edit-due" class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Prazo (opcional)</label>
-          <input id="edit-due" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="edit-due" class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Data</label>
+            <input id="edit-due" type="date" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div>
+            <label for="edit-time" class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Horário</label>
+            <input id="edit-time" type="time" class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
         </div>
 
         <div class="flex justify-end gap-2 pt-2">
@@ -413,6 +515,12 @@
         Saúde: 'bg-pink-50 text-pink-700 dark:bg-pink-950/60 dark:text-pink-300',
       };
 
+      const POMO_DURATIONS = {
+        focus: 25 * 60,
+        short: 5 * 60,
+        long: 15 * 60,
+      };
+
       const todayISO = () => {
         const now = new Date();
         const y = now.getFullYear();
@@ -424,52 +532,67 @@
       const DEFAULT_TASKS = [
         {
           id: 't1',
-          title: 'Rotina fiscal e fechamento mensal',
+          title: 'Reunião de alinhamento fiscal',
+          type: 'event',
           category: 'Bux Contabilidade',
           client: 'SUPERMERCADO CENTRAL',
           priority: 'alta',
           due: todayISO(),
+          time: '09:00',
+          status: 'todo',
           completed: false,
+          pomodoros: 0,
           createdAt: Date.now() - 400000,
           subtasks: [
-            { id: 's1', text: 'Conferir notas fiscais de entrada e saída', done: true },
-            { id: 's2', text: 'Apurar impostos e gerar guias', done: false },
-            { id: 's3', text: 'Enviar guias para o cliente', done: false },
+            { id: 's1', text: 'Separar balancete e guias do mês', done: true },
+            { id: 's2', text: 'Validar pendências de notas fiscais', done: false },
           ],
         },
         {
           id: 't2',
           title: 'Obrigações acessórias e folha',
+          type: 'task',
           category: 'Bux Contabilidade',
           client: 'LUCIA HELENA DE SOUZA TELES',
           priority: 'media',
           due: todayISO(),
+          time: '11:00',
+          status: 'doing',
           completed: false,
+          pomodoros: 1,
           createdAt: Date.now() - 300000,
           subtasks: [
-            { id: 's4', text: 'Solicitar movimentação do mês', done: false },
+            { id: 's4', text: 'Solicitar movimentação do mês', done: true },
             { id: 's5', text: 'Transmitir declarações mensais', done: false },
           ],
         },
         {
           id: 't3',
           title: 'Atendimento e revisão contábil',
+          type: 'task',
           category: 'Bux Contabilidade',
           client: 'DEUSMAR CANDIDO DA SILVA',
           priority: 'media',
-          due: '',
+          due: todayISO(),
+          time: '14:30',
+          status: 'todo',
           completed: false,
+          pomodoros: 0,
           createdAt: Date.now() - 200000,
           subtasks: [],
         },
         {
           id: 't4',
           title: 'Estruturação inicial e backlog da sprint',
+          type: 'task',
           category: 'Dorion Tecnologia',
           client: 'Interno — Produto / MVP',
           priority: 'alta',
           due: todayISO(),
+          time: '16:00',
+          status: 'todo',
           completed: false,
+          pomodoros: 0,
           createdAt: Date.now() - 100000,
           subtasks: [
             { id: 's6', text: 'Definir escopo prioritário da semana', done: true },
@@ -480,22 +603,41 @@
 
       let state = {
         tasks: [],
+        viewMode: 'today',
         filterStatus: 'all',
         filterCategory: 'all',
         filterClient: 'all',
         search: '',
-        sortBy: 'recent',
-        groupByClient: false,
+        sortBy: 'chronological',
         expandedTasks: {},
         undoSnapshot: null,
+        dragTaskId: null,
+        pomo: {
+          mode: 'focus',
+          secondsLeft: POMO_DURATIONS.focus,
+          running: false,
+          activeTaskId: null,
+          intervalId: null,
+        },
       };
 
       let toastTimer = null;
 
       function normalizeTask(t) {
+        const completed = Boolean(t.completed || t.status === 'done');
+        const status = t.status && ['todo', 'doing', 'done'].includes(t.status)
+          ? t.status
+          : completed
+          ? 'done'
+          : 'todo';
         return {
           ...t,
+          type: t.type === 'event' ? 'event' : 'task',
           client: typeof t.client === 'string' ? t.client : '',
+          time: typeof t.time === 'string' ? t.time : '',
+          status,
+          completed: status === 'done',
+          pomodoros: Number.isFinite(t.pomodoros) ? t.pomodoros : 0,
           subtasks: Array.isArray(t.subtasks) ? t.subtasks : [],
         };
       }
@@ -507,21 +649,14 @@
             const parsed = JSON.parse(raw);
             if (Array.isArray(parsed)) return parsed.map(normalizeTask);
           }
-        } catch (e) {
-          // Ignore storage restrictions
-        }
-        return DEFAULT_TASKS.map((t) => ({
-          ...t,
-          subtasks: t.subtasks.map((s) => ({ ...s })),
-        }));
+        } catch (e) {}
+        return DEFAULT_TASKS.map((t) => normalizeTask({ ...t, subtasks: t.subtasks.map((s) => ({ ...s })) }));
       }
 
       function saveTasks() {
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(state.tasks));
-        } catch (e) {
-          // Ignore storage restrictions
-        }
+        } catch (e) {}
       }
 
       function applyTheme(dark) {
@@ -554,6 +689,238 @@
         return `${parts[2]}/${parts[1]}/${parts[0]}`;
       }
 
+      function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      function showToast(message, allowUndo = false) {
+        const toast = document.getElementById('toast');
+        const msgEl = document.getElementById('toast-message');
+        const undoBtn = document.getElementById('toast-undo');
+
+        msgEl.textContent = message;
+        undoBtn.classList.toggle('hidden', !allowUndo);
+        toast.classList.remove('hidden');
+
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+          toast.classList.add('hidden');
+          state.undoSnapshot = null;
+        }, 4500);
+      }
+
+      function playChime() {
+        try {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (!AudioCtx) return;
+          const ctx = new AudioCtx();
+          const now = ctx.currentTime;
+          [523.25, 659.25, 783.99].forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + idx * 0.12);
+            gain.gain.setValueAtTime(0.08, now + idx * 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.12 + 0.35);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + idx * 0.12);
+            osc.stop(now + idx * 0.12 + 0.36);
+          });
+        } catch (e) {}
+      }
+
+      // Pomodoro
+      function formatSeconds(sec) {
+        const m = String(Math.floor(sec / 60)).padStart(2, '0');
+        const s = String(sec % 60).padStart(2, '0');
+        return `${m}:${s}`;
+      }
+
+      function renderPomodoro() {
+        document.getElementById('pomo-display').textContent = formatSeconds(state.pomo.secondsLeft);
+        document.getElementById('pomo-toggle').textContent = state.pomo.running ? 'Pausar' : 'Iniciar';
+
+        document.querySelectorAll('.pomo-mode-btn').forEach((btn) => {
+          const active = btn.dataset.pomoMode === state.pomo.mode;
+          btn.className = active
+            ? 'pomo-mode-btn px-2 py-0.5 rounded-md font-medium bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
+            : 'pomo-mode-btn px-2 py-0.5 rounded-md font-medium text-slate-500 dark:text-slate-400';
+        });
+
+        const activeTask = state.tasks.find((t) => t.id === state.pomo.activeTaskId);
+        document.getElementById('pomo-task-label').textContent = activeTask
+          ? `Em foco: ${activeTask.title}${activeTask.client ? ' (' + activeTask.client + ')' : ''}`
+          : 'Clique no ▶ em qualquer tarefa para focar';
+      }
+
+      function stopPomodoroInterval() {
+        if (state.pomo.intervalId) {
+          clearInterval(state.pomo.intervalId);
+          state.pomo.intervalId = null;
+        }
+        state.pomo.running = false;
+      }
+
+      function startPomodoro() {
+        if (state.pomo.running) return;
+        state.pomo.running = true;
+        renderPomodoro();
+        state.pomo.intervalId = setInterval(() => {
+          state.pomo.secondsLeft -= 1;
+          if (state.pomo.secondsLeft <= 0) {
+            stopPomodoroInterval();
+            playChime();
+            if (state.pomo.mode === 'focus' && state.pomo.activeTaskId) {
+              const task = state.tasks.find((t) => t.id === state.pomo.activeTaskId);
+              if (task) {
+                task.pomodoros = (task.pomodoros || 0) + 1;
+                saveTasks();
+                renderTasks();
+              }
+              showToast('Pomodoro concluído! Hora de uma pausa rápida.');
+            } else {
+              showToast('Tempo finalizado!');
+            }
+            state.pomo.secondsLeft = POMO_DURATIONS[state.pomo.mode];
+          }
+          renderPomodoro();
+        }, 1000);
+      }
+
+      function focusTaskInPomodoro(taskId) {
+        const task = state.tasks.find((t) => t.id === taskId);
+        if (!task) return;
+        stopPomodoroInterval();
+        state.pomo.mode = 'focus';
+        state.pomo.secondsLeft = POMO_DURATIONS.focus;
+        state.pomo.activeTaskId = taskId;
+        if (task.status === 'todo') {
+          task.status = 'doing';
+          task.completed = false;
+          saveTasks();
+          renderTasks();
+        }
+        startPomodoro();
+        renderPomodoro();
+      }
+
+      function syncClientOptions() {
+        const allClients = new Set(REGISTERED_CLIENTS);
+        state.tasks.forEach((t) => {
+          if (t.client && t.client.trim()) allClients.add(t.client.trim());
+        });
+        const sorted = Array.from(allClients);
+
+        const datalist = document.getElementById('client-suggestions');
+        datalist.innerHTML = sorted.map((c) => `<option value="${escapeHtml(c)}"></option>`).join('');
+
+        const filterSelect = document.getElementById('filter-client');
+        const currentVal = state.filterClient;
+        const usedClients = Array.from(
+          new Set(state.tasks.map((t) => (t.client || '').trim()).filter(Boolean))
+        ).sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+        filterSelect.innerHTML =
+          '<option value="all">Todos os clientes / projetos</option>' +
+          '<option value="__none__">Sem cliente / projeto</option>' +
+          usedClients.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+
+        if (Array.from(filterSelect.options).some((o) => o.value === currentVal)) {
+          filterSelect.value = currentVal;
+        } else {
+          state.filterClient = 'all';
+          filterSelect.value = 'all';
+        }
+      }
+
+      function compareChronological(a, b) {
+        if (a.completed !== b.completed) return a.completed ? 1 : -1;
+        const dateA = a.due || '9999-12-31';
+        const dateB = b.due || '9999-12-31';
+        if (dateA !== dateB) return dateA.localeCompare(dateB);
+        const timeA = a.time || '99:99';
+        const timeB = b.time || '99:99';
+        if (timeA !== timeB) return timeA.localeCompare(timeB);
+        return (PRIORITY_WEIGHT[b.priority] || 0) - (PRIORITY_WEIGHT[a.priority] || 0);
+      }
+
+      function getFilteredTasks(ignoreTodayOnly = false) {
+        const query = state.search.trim().toLowerCase();
+        const today = todayISO();
+
+        const filtered = state.tasks.filter((task) => {
+          if (!ignoreTodayOnly && state.viewMode === 'today' && task.due !== today) return false;
+          if (state.filterStatus === 'pending' && task.completed) return false;
+          if (state.filterStatus === 'completed' && !task.completed) return false;
+          if (state.filterCategory !== 'all' && task.category !== state.filterCategory) return false;
+          if (state.filterClient === '__none__' && (task.client || '').trim() !== '') return false;
+          if (state.filterClient !== 'all' && state.filterClient !== '__none__' && (task.client || '').trim() !== state.filterClient) return false;
+          if (
+            query &&
+            !task.title.toLowerCase().includes(query) &&
+            !task.category.toLowerCase().includes(query) &&
+            !(task.client || '').toLowerCase().includes(query) &&
+            !task.subtasks.some((s) => s.text.toLowerCase().includes(query))
+          ) {
+            return false;
+          }
+          return true;
+        });
+
+        filtered.sort((a, b) => {
+          if (state.viewMode === 'today' || state.sortBy === 'chronological') {
+            return compareChronological(a, b);
+          }
+          if (a.completed !== b.completed) return a.completed ? 1 : -1;
+          if (state.sortBy === 'priority') {
+            return (PRIORITY_WEIGHT[b.priority] || 0) - (PRIORITY_WEIGHT[a.priority] || 0);
+          }
+          return b.createdAt - a.createdAt;
+        });
+
+        return filtered;
+      }
+
+      function renderProgress() {
+        const total = state.tasks.length;
+        const completed = state.tasks.filter((t) => t.completed).length;
+        const pending = total - completed;
+        const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
+
+        document.getElementById('progress-text').textContent = `${completed} de ${total} concluídas (${pct}%)`;
+        document.getElementById('progress-bar').style.width = `${pct}%`;
+
+        const today = todayISO();
+        const todayPending = state.tasks.filter((t) => t.due === today && !t.completed).length;
+        const todayEvents = state.tasks.filter((t) => t.due === today && t.type === 'event' && !t.completed).length;
+        document.getElementById('today-summary').textContent = `Hoje: ${todayPending} pendente(s)`;
+        document.getElementById('events-summary').textContent = `Eventos hoje: ${todayEvents}`;
+
+        document.getElementById('count-all').textContent = total;
+        document.getElementById('count-pending').textContent = pending;
+        document.getElementById('count-completed').textContent = completed;
+        document.getElementById('clear-completed').disabled = completed === 0;
+      }
+
+      function renderTabs() {
+        document.querySelectorAll('.filter-tab').forEach((btn) => {
+          const active = btn.dataset.filter === state.filterStatus;
+          btn.className = active
+            ? 'filter-tab px-2.5 py-1 rounded-lg text-xs font-medium transition-colors bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
+            : 'filter-tab px-2.5 py-1 rounded-lg text-xs font-medium transition-colors text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+        });
+
+        document.querySelectorAll('.view-btn').forEach((btn) => {
+          const active = btn.dataset.view === state.viewMode;
+          btn.className = active
+            ? 'view-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
+            : 'view-btn px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+        });
+      }
+
       function addOneDayCompact(iso) {
         const parts = iso.split('-').map(Number);
         const dt = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2] + 1));
@@ -566,8 +933,10 @@
       function buildTaskDescription(task) {
         const pLabel = (PRIORITY_STYLES[task.priority] || PRIORITY_STYLES.media).label;
         const lines = [
+          `Tipo: ${task.type === 'event' ? 'Evento / Reunião' : 'Tarefa'}`,
           `Empresa/Área: ${task.category}`,
           task.client ? `Cliente/Projeto: ${task.client}` : null,
+          task.time ? `Horário: ${task.time}` : null,
           `Prioridade: ${pLabel}`,
         ].filter(Boolean);
 
@@ -606,7 +975,7 @@
       function exportPendingToIcs() {
         const targets = state.tasks.filter((t) => !t.completed && t.due);
         if (targets.length === 0) {
-          showToast('Nenhuma tarefa pendente com prazo definido para exportar.');
+          showToast('Nenhuma tarefa pendente com data definida para exportar.');
           return;
         }
 
@@ -647,7 +1016,7 @@
         a.click();
         a.remove();
         URL.revokeObjectURL(url);
-        showToast(`${targets.length} tarefa(s) exportada(s) para .ics!`);
+        showToast(`${targets.length} item(ns) exportado(s) para .ics!`);
       }
 
       function exportTasksJson() {
@@ -661,7 +1030,7 @@
         a.click();
         a.remove();
         URL.revokeObjectURL(url);
-        showToast(`${state.tasks.length} tarefa(s) salva(s) no backup!`);
+        showToast(`${state.tasks.length} item(ns) salvo(s) no backup!`);
       }
 
       function importTasksJson(file) {
@@ -671,7 +1040,7 @@
           try {
             const parsed = JSON.parse(String(reader.result || ''));
             if (!Array.isArray(parsed)) {
-              showToast('Arquivo inválido: selecione um backup .json de tarefas.');
+              showToast('Arquivo inválido: selecione um backup .json.');
               return;
             }
             const valid = parsed
@@ -682,7 +1051,7 @@
               }));
 
             if (valid.length === 0) {
-              showToast('Nenhuma tarefa válida encontrada no arquivo.');
+              showToast('Nenhum item válido encontrado no arquivo.');
               return;
             }
 
@@ -698,7 +1067,7 @@
             });
             saveTasks();
             renderTasks();
-            showToast(added > 0 ? `${added} tarefa(s) importada(s)!` : 'Todas as tarefas do arquivo já estavam na lista.', added > 0);
+            showToast(added > 0 ? `${added} item(ns) importado(s)!` : 'Todos os itens do arquivo já estavam na lista.', added > 0);
           } catch (err) {
             showToast('Não foi possível ler o arquivo JSON.');
           }
@@ -706,166 +1075,58 @@
         reader.readAsText(file);
       }
 
-      function escapeHtml(str) {
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-      }
-
-      function showToast(message, allowUndo = false) {
-        const toast = document.getElementById('toast');
-        const msgEl = document.getElementById('toast-message');
-        const undoBtn = document.getElementById('toast-undo');
-
-        msgEl.textContent = message;
-        undoBtn.classList.toggle('hidden', !allowUndo);
-        toast.classList.remove('hidden');
-
-        if (toastTimer) clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => {
-          toast.classList.add('hidden');
-          state.undoSnapshot = null;
-        }, 4500);
-      }
-
-      function syncClientOptions() {
-        const allClients = new Set(REGISTERED_CLIENTS);
-        state.tasks.forEach((t) => {
-          if (t.client && t.client.trim()) allClients.add(t.client.trim());
-        });
-        const sorted = Array.from(allClients);
-
-        const datalist = document.getElementById('client-suggestions');
-        datalist.innerHTML = sorted.map((c) => `<option value="${escapeHtml(c)}"></option>`).join('');
-
-        const filterSelect = document.getElementById('filter-client');
-        const currentVal = state.filterClient;
-        const usedClients = Array.from(
-          new Set(state.tasks.map((t) => (t.client || '').trim()).filter(Boolean))
-        ).sort((a, b) => a.localeCompare(b, 'pt-BR'));
-
-        filterSelect.innerHTML =
-          '<option value="all">Todos os clientes / projetos</option>' +
-          '<option value="__none__">Sem cliente / projeto</option>' +
-          usedClients.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
-
-        if (Array.from(filterSelect.options).some((o) => o.value === currentVal)) {
-          filterSelect.value = currentVal;
-        } else {
-          state.filterClient = 'all';
-          filterSelect.value = 'all';
-        }
-      }
-
-      function getFilteredTasks() {
-        const query = state.search.trim().toLowerCase();
-        const filtered = state.tasks.filter((task) => {
-          if (state.filterStatus === 'pending' && task.completed) return false;
-          if (state.filterStatus === 'completed' && !task.completed) return false;
-          if (state.filterCategory !== 'all' && task.category !== state.filterCategory) return false;
-          if (state.filterClient === '__none__' && (task.client || '').trim() !== '') return false;
-          if (state.filterClient !== 'all' && state.filterClient !== '__none__' && (task.client || '').trim() !== state.filterClient) return false;
-          if (
-            query &&
-            !task.title.toLowerCase().includes(query) &&
-            !task.category.toLowerCase().includes(query) &&
-            !(task.client || '').toLowerCase().includes(query) &&
-            !task.subtasks.some((s) => s.text.toLowerCase().includes(query))
-          ) {
-            return false;
-          }
-          return true;
-        });
-
-        filtered.sort((a, b) => {
-          if (a.completed !== b.completed) return a.completed ? 1 : -1;
-          if (state.sortBy === 'priority') {
-            return (PRIORITY_WEIGHT[b.priority] || 0) - (PRIORITY_WEIGHT[a.priority] || 0);
-          }
-          if (state.sortBy === 'due') {
-            if (!a.due && !b.due) return b.createdAt - a.createdAt;
-            if (!a.due) return 1;
-            if (!b.due) return -1;
-            return a.due.localeCompare(b.due);
-          }
-          return b.createdAt - a.createdAt;
-        });
-
-        return filtered;
-      }
-
-      function renderProgress() {
-        const total = state.tasks.length;
-        const completed = state.tasks.filter((t) => t.completed).length;
-        const pending = total - completed;
-        const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
-
-        document.getElementById('progress-text').textContent = `${completed} de ${total} concluídas (${pct}%)`;
-        document.getElementById('progress-bar').style.width = `${pct}%`;
-
-        document.getElementById('count-all').textContent = total;
-        document.getElementById('count-pending').textContent = pending;
-        document.getElementById('count-completed').textContent = completed;
-        document.getElementById('clear-completed').disabled = completed === 0;
-      }
-
-      function renderTabs() {
-        document.querySelectorAll('.filter-tab').forEach((btn) => {
-          const active = btn.dataset.filter === state.filterStatus;
-          btn.className = active
-            ? 'filter-tab px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
-            : 'filter-tab px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
-        });
-
-        document.getElementById('view-label').textContent = state.groupByClient ? 'Ver em Lista' : 'Agrupar por Cliente';
-      }
-
-      function renderTaskCard(task, today) {
+      function renderTaskCard(task, today, compact = false) {
         const pStyle = PRIORITY_STYLES[task.priority] || PRIORITY_STYLES.media;
         const cStyle = CATEGORY_STYLES[task.category] || 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300';
         const isOverdue = !task.completed && task.due && task.due < today;
         const isToday = !task.completed && task.due && task.due === today;
+        const isFocused = state.pomo.activeTaskId === task.id;
 
         const subtasks = task.subtasks || [];
         const doneSub = subtasks.filter((s) => s.done).length;
-        const isExpanded = state.expandedTasks[task.id] !== undefined ? state.expandedTasks[task.id] : subtasks.length > 0;
+        const isExpanded = !compact && (state.expandedTasks[task.id] !== undefined ? state.expandedTasks[task.id] : subtasks.length > 0);
+
+        const typeBadge = task.type === 'event'
+          ? '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-violet-100 text-violet-700 dark:bg-violet-950/60 dark:text-violet-300">Evento</span>'
+          : '';
 
         let dueBadge = '';
-        if (task.due) {
+        if (task.due || task.time) {
           const dueClass = isOverdue
             ? 'text-rose-600 dark:text-rose-400 font-medium'
             : isToday
             ? 'text-indigo-600 dark:text-indigo-400 font-medium'
             : 'text-slate-500 dark:text-slate-400';
-          const dueText = isOverdue
-            ? `Atrasada (${formatDateBR(task.due)})`
-            : isToday
-            ? 'Vence hoje'
-            : formatDateBR(task.due);
+          const datePart = task.due
+            ? isOverdue
+              ? `Atrasada (${formatDateBR(task.due)})`
+              : isToday
+              ? 'Hoje'
+              : formatDateBR(task.due)
+            : '';
+          const timePart = task.time ? `${datePart ? ' às ' : ''}${task.time}` : '';
           dueBadge = `
             <span class="inline-flex items-center gap-1 text-xs ${dueClass}">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              ${escapeHtml(dueText)}
+              ${escapeHtml(datePart + timePart)}
             </span>`;
         }
 
         const clientBadge = task.client
           ? `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200 border border-slate-200/80 dark:border-slate-700">
-               <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
-               </svg>
                ${escapeHtml(task.client)}
              </span>`
           : '';
 
-        const subtaskCounter =
-          subtasks.length > 0
-            ? `<span class="inline-flex items-center gap-1 text-xs font-medium text-slate-500 dark:text-slate-400">
-                 ${doneSub}/${subtasks.length} etapas
-               </span>`
-            : '';
+        const pomoBadge = task.pomodoros > 0
+          ? `<span class="inline-flex items-center px-1.5 py-0.5 rounded-md text-xs font-medium bg-rose-50 text-rose-600 dark:bg-rose-950/50 dark:text-rose-300">${task.pomodoros}x 25m</span>`
+          : '';
+
+        const subtaskCounter = subtasks.length > 0
+          ? `<span class="inline-flex items-center text-xs font-medium text-slate-500 dark:text-slate-400">${doneSub}/${subtasks.length} etapas</span>`
+          : '';
 
         const subtasksHtml = isExpanded
           ? `<div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
@@ -875,7 +1136,7 @@
                         ${subtasks
                           .map(
                             (sub) => `
-                          <li class="flex items-center justify-between gap-2 group/sub">
+                          <li class="flex items-center justify-between gap-2">
                             <button
                               type="button"
                               data-action="toggle-sub"
@@ -926,8 +1187,25 @@
              </div>`
           : '';
 
+        const kanbanControls = compact
+          ? `<div class="flex items-center justify-between gap-2 mt-2.5 pt-2 border-t border-slate-100 dark:border-slate-800">
+               <div class="flex items-center gap-1">
+                 ${task.status !== 'todo' ? '<button type="button" data-action="move-left" class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-xs hover:bg-slate-200 dark:hover:bg-slate-700" title="Mover para esquerda">←</button>' : ''}
+                 ${task.status !== 'done' ? '<button type="button" data-action="move-right" class="px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-xs hover:bg-slate-200 dark:hover:bg-slate-700" title="Mover para direita">→</button>' : ''}
+               </div>
+               <div class="flex items-center gap-1">
+                 <button type="button" data-action="focus" title="Iniciar Pomodoro" class="p-1 rounded text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40">▶</button>
+                 <button type="button" data-action="edit" title="Editar" class="p-1 rounded text-slate-400 hover:text-indigo-600">✎</button>
+               </div>
+             </div>`
+          : '';
+
         return `
-          <li data-id="${escapeHtml(task.id)}" class="task-enter group bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-3.5 sm:p-4 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-all ${task.completed ? 'opacity-70' : ''}">
+          <li
+            data-id="${escapeHtml(task.id)}"
+            ${compact ? 'draggable="true"' : ''}
+            class="task-enter group bg-white dark:bg-slate-900 border ${isFocused ? 'border-rose-400 dark:border-rose-600 ring-1 ring-rose-400/40' : 'border-slate-200 dark:border-slate-800'} rounded-2xl p-3.5 sm:p-4 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition-all ${task.completed ? 'opacity-70' : ''} ${compact ? 'cursor-grab active:cursor-grabbing' : ''}"
+          >
             <div class="flex items-start gap-3">
               <button
                 type="button"
@@ -947,10 +1225,11 @@
               </button>
 
               <div class="flex-1 min-w-0">
-                <p class="text-sm sm:text-base font-medium break-words ${task.completed ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'}">
+                <p class="text-sm font-medium break-words ${task.completed ? 'line-through text-slate-400 dark:text-slate-500' : 'text-slate-800 dark:text-slate-100'}">
                   ${escapeHtml(task.title)}
                 </p>
-                <div class="flex flex-wrap items-center gap-2 mt-2">
+                <div class="flex flex-wrap items-center gap-1.5 mt-2">
+                  ${typeBadge}
                   <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${cStyle}">
                     ${escapeHtml(task.category)}
                   </span>
@@ -959,57 +1238,115 @@
                     ${pStyle.label}
                   </span>
                   ${dueBadge}
+                  ${pomoBadge}
                   ${subtaskCounter}
                 </div>
                 ${subtasksHtml}
+                ${kanbanControls}
               </div>
 
-              <div class="flex items-center gap-1 shrink-0">
-                <button
-                  type="button"
-                  data-action="gcal"
-                  title="Enviar para o Google Agenda"
-                  aria-label="Enviar para o Google Agenda"
-                  class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  data-action="toggle-expand"
-                  title="Etapas / Subtarefas"
-                  aria-label="Mostrar ou ocultar etapas"
-                  class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  data-action="edit"
-                  aria-label="Editar tarefa"
-                  class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  data-action="delete"
-                  aria-label="Excluir tarefa"
-                  class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
-                  </svg>
-                </button>
-              </div>
+              ${
+                compact
+                  ? ''
+                  : `<div class="flex items-center gap-1 shrink-0">
+                      <button
+                        type="button"
+                        data-action="focus"
+                        title="Focar com Pomodoro"
+                        aria-label="Focar com Pomodoro"
+                        class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+                      >
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5.14v14l11-7-11-7z" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        data-action="gcal"
+                        title="Enviar para o Google Agenda"
+                        aria-label="Enviar para o Google Agenda"
+                        class="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        data-action="toggle-expand"
+                        title="Etapas / Subtarefas"
+                        aria-label="Mostrar ou ocultar etapas"
+                        class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        data-action="edit"
+                        aria-label="Editar tarefa"
+                        class="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        data-action="delete"
+                        aria-label="Excluir tarefa"
+                        class="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                        </svg>
+                      </button>
+                    </div>`
+              }
             </div>
           </li>
+        `;
+      }
+
+      function renderKanban(items, today) {
+        const cols = [
+          { key: 'todo', title: 'A Fazer', dot: 'bg-slate-400' },
+          { key: 'doing', title: 'Em Andamento', dot: 'bg-indigo-500' },
+          { key: 'done', title: 'Concluído', dot: 'bg-emerald-500' },
+        ];
+
+        return `
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            ${cols
+              .map((col) => {
+                const colItems = items.filter((t) => t.status === col.key);
+                return `
+                  <section
+                    data-kanban-col="${col.key}"
+                    class="kanban-col bg-slate-100/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl p-3 flex flex-col min-h-[260px]"
+                  >
+                    <div class="flex items-center justify-between px-1 mb-3">
+                      <h2 class="text-sm font-semibold flex items-center gap-2 text-slate-700 dark:text-slate-200">
+                        <span class="w-2.5 h-2.5 rounded-full ${col.dot}"></span>
+                        ${col.title}
+                      </h2>
+                      <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                        ${colItems.length}
+                      </span>
+                    </div>
+                    <ul class="space-y-2.5 flex-1">
+                      ${
+                        colItems.length > 0
+                          ? colItems.map((t) => renderTaskCard(t, today, true)).join('')
+                          : '<li class="text-xs text-slate-400 dark:text-slate-500 text-center py-8 border border-dashed border-slate-300 dark:border-slate-700 rounded-xl">Arraste ou mova itens para cá</li>'
+                      }
+                    </ul>
+                  </section>
+                `;
+              })
+              .join('')}
+          </div>
         `;
       }
 
@@ -1017,10 +1354,18 @@
         syncClientOptions();
         renderProgress();
         renderTabs();
+        renderPomodoro();
 
         const containerEl = document.getElementById('task-list');
         const emptyEl = document.getElementById('empty-state');
         const items = getFilteredTasks();
+        const today = todayISO();
+
+        if (state.viewMode === 'kanban') {
+          emptyEl.classList.add('hidden');
+          containerEl.innerHTML = renderKanban(items, today);
+          return;
+        }
 
         if (items.length === 0) {
           containerEl.innerHTML = '';
@@ -1029,46 +1374,72 @@
         }
 
         emptyEl.classList.add('hidden');
-        const today = todayISO();
 
-        if (!state.groupByClient) {
-          containerEl.innerHTML = `<ul class="space-y-2.5">${items.map((t) => renderTaskCard(t, today)).join('')}</ul>`;
+        if (state.viewMode === 'today') {
+          const withTime = items.filter((t) => t.time);
+          const withoutTime = items.filter((t) => !t.time);
+          containerEl.innerHTML = `
+            ${
+              withTime.length > 0
+                ? `<div class="space-y-2.5">
+                     <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 px-1">Com horário definido</h2>
+                     <ul class="space-y-2.5">${withTime.map((t) => renderTaskCard(t, today)).join('')}</ul>
+                   </div>`
+                : ''
+            }
+            ${
+              withoutTime.length > 0
+                ? `<div class="space-y-2.5">
+                     <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 px-1 pt-2">Demais tarefas de hoje</h2>
+                     <ul class="space-y-2.5">${withoutTime.map((t) => renderTaskCard(t, today)).join('')}</ul>
+                   </div>`
+                : ''
+            }
+          `;
           return;
         }
 
-        const groups = new Map();
-        items.forEach((task) => {
-          const key = (task.client || '').trim() || 'Sem cliente / projeto definido';
-          if (!groups.has(key)) groups.set(key, []);
-          groups.get(key).push(task);
-        });
+        if (state.viewMode === 'clients') {
+          const groups = new Map();
+          items.forEach((task) => {
+            const key = (task.client || '').trim() || 'Sem cliente / projeto definido';
+            if (!groups.has(key)) groups.set(key, []);
+            groups.get(key).push(task);
+          });
 
-        containerEl.innerHTML = Array.from(groups.entries())
-          .map(([groupName, groupTasks]) => {
-            const doneCount = groupTasks.filter((t) => t.completed).length;
-            return `
-              <section class="space-y-2.5">
-                <div class="flex items-center justify-between px-1 pt-2">
-                  <h2 class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
-                    ${escapeHtml(groupName)}
-                  </h2>
-                  <span class="text-xs text-slate-500 dark:text-slate-400">${doneCount}/${groupTasks.length} concluídas</span>
-                </div>
-                <ul class="space-y-2.5">${groupTasks.map((t) => renderTaskCard(t, today)).join('')}</ul>
-              </section>
-            `;
-          })
-          .join('');
+          containerEl.innerHTML = Array.from(groups.entries())
+            .map(([groupName, groupTasks]) => {
+              const doneCount = groupTasks.filter((t) => t.completed).length;
+              return `
+                <section class="space-y-2.5">
+                  <div class="flex items-center justify-between px-1 pt-2">
+                    <h2 class="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                      <span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+                      ${escapeHtml(groupName)}
+                    </h2>
+                    <span class="text-xs text-slate-500 dark:text-slate-400">${doneCount}/${groupTasks.length} concluídas</span>
+                  </div>
+                  <ul class="space-y-2.5">${groupTasks.map((t) => renderTaskCard(t, today)).join('')}</ul>
+                </section>
+              `;
+            })
+            .join('');
+          return;
+        }
+
+        containerEl.innerHTML = `<ul class="space-y-2.5">${items.map((t) => renderTaskCard(t, today)).join('')}</ul>`;
       }
 
       function openEditModal(task) {
         document.getElementById('edit-id').value = task.id;
         document.getElementById('edit-title').value = task.title;
+        document.getElementById('edit-type').value = task.type || 'task';
+        document.getElementById('edit-status').value = task.status || 'todo';
         document.getElementById('edit-category').value = task.category;
         document.getElementById('edit-client').value = task.client || '';
         document.getElementById('edit-priority').value = task.priority;
         document.getElementById('edit-due').value = task.due || '';
+        document.getElementById('edit-time').value = task.time || '';
         document.getElementById('edit-modal').classList.remove('hidden');
         document.getElementById('edit-title').focus();
       }
@@ -1084,28 +1455,36 @@
         const title = titleInput.value.trim();
         if (!title) return;
 
-        const newTask = {
+        const dueVal = document.getElementById('task-due').value || (state.viewMode === 'today' ? todayISO() : '');
+
+        const newTask = normalizeTask({
           id: 't_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
           title,
+          type: document.getElementById('task-type').value,
           category: document.getElementById('task-category').value,
           client: document.getElementById('task-client').value.trim(),
           priority: document.getElementById('task-priority').value,
-          due: document.getElementById('task-due').value,
+          due: dueVal,
+          time: document.getElementById('task-time').value,
+          status: 'todo',
           completed: false,
+          pomodoros: 0,
           createdAt: Date.now(),
           subtasks: [],
-        };
+        });
 
         state.tasks.unshift(newTask);
         saveTasks();
         renderTasks();
 
         titleInput.value = '';
-        document.getElementById('task-due').value = '';
+        document.getElementById('task-time').value = '';
         titleInput.focus();
       });
 
-      document.getElementById('task-list').addEventListener('click', (e) => {
+      const taskListEl = document.getElementById('task-list');
+
+      taskListEl.addEventListener('click', (e) => {
         const btn = e.target.closest('button[data-action]');
         if (!btn) return;
         const li = btn.closest('li[data-id]');
@@ -1117,8 +1496,21 @@
 
         if (action === 'toggle') {
           task.completed = !task.completed;
+          task.status = task.completed ? 'done' : 'todo';
           saveTasks();
           renderTasks();
+        } else if (action === 'move-left') {
+          task.status = task.status === 'done' ? 'doing' : 'todo';
+          task.completed = false;
+          saveTasks();
+          renderTasks();
+        } else if (action === 'move-right') {
+          task.status = task.status === 'todo' ? 'doing' : 'done';
+          task.completed = task.status === 'done';
+          saveTasks();
+          renderTasks();
+        } else if (action === 'focus') {
+          focusTaskInPomodoro(id);
         } else if (action === 'gcal') {
           openGoogleCalendar(task);
         } else if (action === 'toggle-expand') {
@@ -1143,13 +1535,45 @@
         } else if (action === 'delete') {
           state.undoSnapshot = state.tasks.map((t) => ({ ...t, subtasks: (t.subtasks || []).map((s) => ({ ...s })) }));
           state.tasks = state.tasks.filter((t) => t.id !== id);
+          if (state.pomo.activeTaskId === id) {
+            stopPomodoroInterval();
+            state.pomo.activeTaskId = null;
+          }
           saveTasks();
           renderTasks();
-          showToast('Tarefa removida.', true);
+          showToast('Item removido.', true);
         }
       });
 
-      document.getElementById('task-list').addEventListener('submit', (e) => {
+      // Drag and drop no Kanban
+      taskListEl.addEventListener('dragstart', (e) => {
+        const li = e.target.closest('li[data-id]');
+        if (!li) return;
+        state.dragTaskId = li.dataset.id;
+      });
+
+      taskListEl.addEventListener('dragover', (e) => {
+        if (e.target.closest('.kanban-col')) {
+          e.preventDefault();
+        }
+      });
+
+      taskListEl.addEventListener('drop', (e) => {
+        const col = e.target.closest('.kanban-col');
+        if (!col || !state.dragTaskId) return;
+        e.preventDefault();
+        const newStatus = col.dataset.kanbanCol;
+        const task = state.tasks.find((t) => t.id === state.dragTaskId);
+        state.dragTaskId = null;
+        if (task && newStatus && task.status !== newStatus) {
+          task.status = newStatus;
+          task.completed = newStatus === 'done';
+          saveTasks();
+          renderTasks();
+        }
+      });
+
+      taskListEl.addEventListener('submit', (e) => {
         const form = e.target.closest('form[data-subform]');
         if (!form) return;
         e.preventDefault();
@@ -1168,6 +1592,13 @@
         });
         state.expandedTasks[taskId] = true;
         saveTasks();
+        renderTasks();
+      });
+
+      document.getElementById('view-switcher').addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-view]');
+        if (!btn) return;
+        state.viewMode = btn.dataset.view;
         renderTasks();
       });
 
@@ -1212,9 +1643,29 @@
 
       document.getElementById('export-ics').addEventListener('click', exportPendingToIcs);
 
-      document.getElementById('view-toggle').addEventListener('click', () => {
-        state.groupByClient = !state.groupByClient;
-        renderTasks();
+      // Eventos Pomodoro
+      document.getElementById('pomo-toggle').addEventListener('click', () => {
+        if (state.pomo.running) {
+          stopPomodoroInterval();
+          renderPomodoro();
+        } else {
+          startPomodoro();
+        }
+      });
+
+      document.getElementById('pomo-reset').addEventListener('click', () => {
+        stopPomodoroInterval();
+        state.pomo.secondsLeft = POMO_DURATIONS[state.pomo.mode];
+        renderPomodoro();
+      });
+
+      document.querySelectorAll('.pomo-mode-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          stopPomodoroInterval();
+          state.pomo.mode = btn.dataset.pomoMode;
+          state.pomo.secondsLeft = POMO_DURATIONS[state.pomo.mode];
+          renderPomodoro();
+        });
       });
 
       document.getElementById('clear-completed').addEventListener('click', () => {
@@ -1224,7 +1675,7 @@
         state.tasks = state.tasks.filter((t) => !t.completed);
         saveTasks();
         renderTasks();
-        showToast(`${completedCount} tarefa(s) concluída(s) removida(s).`, true);
+        showToast(`${completedCount} item(ns) concluído(s) removido(s).`, true);
       });
 
       document.getElementById('toast-undo').addEventListener('click', () => {
@@ -1245,10 +1696,14 @@
         const task = state.tasks.find((t) => t.id === id);
         if (task) {
           task.title = title;
+          task.type = document.getElementById('edit-type').value;
+          task.status = document.getElementById('edit-status').value;
+          task.completed = task.status === 'done';
           task.category = document.getElementById('edit-category').value;
           task.client = document.getElementById('edit-client').value.trim();
           task.priority = document.getElementById('edit-priority').value;
           task.due = document.getElementById('edit-due').value;
+          task.time = document.getElementById('edit-time').value;
           saveTasks();
           renderTasks();
         }
@@ -1273,6 +1728,8 @@
         month: 'long',
         year: 'numeric',
       }).format(new Date());
+
+      document.getElementById('task-due').value = todayISO();
 
       initTheme();
       state.tasks = loadTasks();
