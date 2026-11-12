@@ -57,6 +57,31 @@
 
       <div class="flex flex-wrap items-center gap-2 self-start sm:self-auto">
         <button
+          id="export-json"
+          type="button"
+          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          title="Exportar backup das tarefas em JSON"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+          </svg>
+          <span>Backup</span>
+        </button>
+
+        <button
+          id="import-json"
+          type="button"
+          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          title="Importar backup de tarefas (.json)"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+          </svg>
+          <span>Importar</span>
+        </button>
+        <input id="import-json-input" type="file" accept="application/json,.json" class="hidden" />
+
+        <button
           id="export-ics"
           type="button"
           class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -625,6 +650,62 @@
         showToast(`${targets.length} tarefa(s) exportada(s) para .ics!`);
       }
 
+      function exportTasksJson() {
+        const payload = JSON.stringify(state.tasks, null, 2);
+        const blob = new Blob([payload], { type: 'application/json;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `backup_tarefas_${todayISO()}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        showToast(`${state.tasks.length} tarefa(s) salva(s) no backup!`);
+      }
+
+      function importTasksJson(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const parsed = JSON.parse(String(reader.result || ''));
+            if (!Array.isArray(parsed)) {
+              showToast('Arquivo inválido: selecione um backup .json de tarefas.');
+              return;
+            }
+            const valid = parsed
+              .filter((t) => t && typeof t.title === 'string' && t.title.trim())
+              .map((t) => normalizeTask({
+                ...t,
+                id: t.id || ('t_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6)),
+              }));
+
+            if (valid.length === 0) {
+              showToast('Nenhuma tarefa válida encontrada no arquivo.');
+              return;
+            }
+
+            state.undoSnapshot = state.tasks.map((t) => ({ ...t, subtasks: (t.subtasks || []).map((s) => ({ ...s })) }));
+            const existingIds = new Set(state.tasks.map((t) => t.id));
+            let added = 0;
+            valid.forEach((t) => {
+              if (!existingIds.has(t.id)) {
+                state.tasks.unshift(t);
+                existingIds.add(t.id);
+                added++;
+              }
+            });
+            saveTasks();
+            renderTasks();
+            showToast(added > 0 ? `${added} tarefa(s) importada(s)!` : 'Todas as tarefas do arquivo já estavam na lista.', added > 0);
+          } catch (err) {
+            showToast('Não foi possível ler o arquivo JSON.');
+          }
+        };
+        reader.readAsText(file);
+      }
+
       function escapeHtml(str) {
         const div = document.createElement('div');
         div.textContent = str;
@@ -1115,6 +1196,18 @@
       document.getElementById('search-input').addEventListener('input', (e) => {
         state.search = e.target.value;
         renderTasks();
+      });
+
+      document.getElementById('export-json').addEventListener('click', exportTasksJson);
+
+      document.getElementById('import-json').addEventListener('click', () => {
+        document.getElementById('import-json-input').click();
+      });
+
+      document.getElementById('import-json-input').addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) importTasksJson(file);
+        e.target.value = '';
       });
 
       document.getElementById('export-ics').addEventListener('click', exportPendingToIcs);
